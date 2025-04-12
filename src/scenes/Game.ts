@@ -79,6 +79,12 @@ export class Game extends Scene {
         const pointer = this.input.activePointer;
         const worldPoint = pointer.positionToCamera(this.cameras.main);
 
+        if (!(worldPoint instanceof Phaser.Math.Vector2)) {
+            console.error('worldPoint is not an object');
+
+            return;
+        }
+
         const tileX = this.mapGround.worldToTileX(worldPoint.x);
         const tileY = this.mapGround.worldToTileY(worldPoint.y);
 
