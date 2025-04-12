@@ -26,11 +26,19 @@ jobs:
             - name: Build project
               run: npm run build
 
-            - name: Debug list output files
-              run: ls -R ./dist
+            - name: Verify build output
+              run: |
+                  ls -la ./dist
+                  # Add this to check if index.html references assets correctly
+                  if [ -f ./dist/index.html ]; then
+                    cat ./dist/index.html | grep -E 'href="|src="'
+                  fi
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./dist
+                  # Add these to ensure proper deployment
+                  keep_files: false # This clears previous contents
+                  force_orphan: true # This ensures a clean deploy each time
