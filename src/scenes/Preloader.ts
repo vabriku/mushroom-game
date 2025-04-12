@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { ASSETS } from '../constants';
+import { IMAGE, MAP } from '../constants';
 
 export class Preloader extends Scene {
     constructor() {
@@ -28,7 +28,9 @@ export class Preloader extends Scene {
         this.load.setPath('assets');
 
         this.load.image('logo', 'logo.png');
-        this.load.image(ASSETS.MARIO_TILESET, 'mario-tileset.png');
+        this.load.image(IMAGE.TILESET, 'images/tiles.png');
+        this.load.tilemapCSV(MAP.LEVEL_1_GROUND, 'maps/level-1_ground.csv');
+        this.load.tilemapCSV(MAP.LEVEL_1_ITEMS, 'maps/level-1_items.csv');
     }
 
     create() {

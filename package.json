@@ -19,7 +19,9 @@
         "dev-nolog": "vite --config vite/config.dev.mjs",
         "build-nolog": "vite build --config vite/config.prod.mjs",
         "lint": "eslint --ext .ts src",
-        "lint:fix": "npm run lint -- --fix"
+        "lint:fix": "npm run lint -- --fix",
+        "docker:build": "docker build -t mushroom-game .",
+        "docker:run": "docker run -p 8080:80 -d --name mushroom-game mushroom-game"
     },
     "devDependencies": {
         "@eslint/js": "^9.24.0",
