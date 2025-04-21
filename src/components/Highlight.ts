@@ -1,10 +1,23 @@
-import { TILE_SIZE } from '../constants';
+import { EVENT, EventData, TILE_SIZE } from '../constants';
+import { isPointWithinBounds } from '../utils/isPointWithinBounds';
 
 export class Highlight {
     scene: Phaser.Scene;
     highlight: Phaser.GameObjects.Graphics;
+    private mapWidth: number;
+    private mapHeight: number;
+
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
+
+        this.scene.events.on(
+            EVENT.MAP_INITIALIZED,
+            ({ width, height }: EventData['MAP_INITIALIZED']) => {
+                this.mapWidth = width;
+                this.mapHeight = height;
+            },
+            this
+        );
     }
 
     create() {
@@ -16,7 +29,12 @@ export class Highlight {
         return this;
     }
 
-    update(mapSize: { width: number; height: number }) {
+    // update(mapSize: { width: number; height: number }) {
+    update() {
+        if (!this.mapWidth || !this.mapHeight) {
+            return;
+        }
+
         const pointer = this.scene.input.activePointer;
         const worldPoint = pointer.positionToCamera(this.scene.cameras.main) as Phaser.Math.Vector2;
         const tileX = Math.floor(worldPoint.x / TILE_SIZE);
@@ -27,19 +45,19 @@ export class Highlight {
         this.highlight.setPosition(snappedX, snappedY);
         this.highlight.setDepth(1);
 
-        const mapWidth = mapSize.width * TILE_SIZE;
-        const mapHeight = mapSize.height * TILE_SIZE;
+        const mapWidth = this.mapWidth * TILE_SIZE;
+        const mapHeight = this.mapHeight * TILE_SIZE;
 
         // Check if the highlight is within the bounds of the map
-        if (
-            worldPoint.x < 0 ||
-            worldPoint.y < 0 ||
-            worldPoint.x >= mapWidth ||
-            worldPoint.y >= mapHeight
-        ) {
-            this.highlight.setVisible(false);
-        } else {
-            this.highlight.setVisible(true);
+        this.highlight.setVisible(
+            isPointWithinBounds(worldPoint, { width: mapWidth, height: mapHeight })
+        );
+
+        if (isPointWithinBounds(worldPoint, { width: mapWidth, height: mapHeight })) {
+            this.scene.events.emit(EVENT.TILE_HIGHLIGHTED, {
+                x: tileX,
+                y: tileY,
+            });
         }
     }
 }
