@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { addTilemapToScene } from '../utils/addTilemapToScene';
 import { Highlight } from '../components/Highlight';
+import { ClickTextPopup } from '../components/ClickTextPopup.ts';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -26,8 +27,10 @@ export class Game extends Scene {
         this.mapGround = mapGround;
         this.mapItems = mapItems;
 
-        this.input.once('pointerdown', () => {
-            console.log('Pointer clicked');
+        const clickPopup = new ClickTextPopup(this);
+
+        this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            clickPopup.show(pointer, this.camera, this.mapGround, 'You clicked!');
         });
 
         this.input.keyboard?.on('keydown-ESC', () => {
