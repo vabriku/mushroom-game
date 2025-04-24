@@ -37,7 +37,6 @@ export class MapController {
         this.mapWidth = groundMap.width;
         this.mapHeight = groundMap.height;
 
-        console.log('DONE');
         this.scene.events.emit(EVENT.MAP_INITIALIZED, {
             width: this.mapWidth,
             height: this.mapHeight,

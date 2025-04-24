@@ -17,7 +17,15 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@components/*": ["./src/components/*"],
+            "@controllers/*": ["./src/controllers/*"],
+            "@utils/*": ["./src/utils/*"],
+            "@scenes/*": ["./src/scenes/*"],
+            "@assets/*": ["./public/assets/*"]
+        }
     },
     "include": ["src"]
 }

@@ -35,6 +35,7 @@ export default tseslint.config(
             ],
             // warn on cyclical imports
             'import/no-cycle': 'warn',
+            '@typescript-eslint/consistent-type-imports': 'warn',
             // Use an empty line before reutrn statments
             'padding-line-between-statements': [
                 'warn',

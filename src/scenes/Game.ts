@@ -5,7 +5,6 @@ import { GraphicsController } from '../controllers/GraphicsController';
 import { InputController } from '../controllers/InputController';
 
 export class Game extends Scene {
-    messageText: Phaser.GameObjects.Text;
     highlight: Highlight;
     mapController?: MapController;
     graphicsController?: GraphicsController;
@@ -16,13 +15,15 @@ export class Game extends Scene {
     }
 
     create() {
+        /**
+         * NB order is important here for events sent in constructors.
+         * Start listening before emitting events.
+         */
         // controllers
-        this.mapController = new MapController(this);
+        this.highlight = new Highlight(this);
         this.graphicsController = new GraphicsController(this);
+        this.mapController = new MapController(this);
         this.inputcontroller = new InputController(this);
-
-        // TODO refactor logic into Selector and pass rendering to GraphicsController
-        this.highlight = new Highlight(this).create();
     }
 
     update(): void {
