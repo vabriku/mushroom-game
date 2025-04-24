@@ -43,16 +43,7 @@ export class Highlight {
         });
         const hasPointChanged = this.point?.x !== tilePoint.x || this.point?.y !== tilePoint.y;
 
-        // console.log({
-        //     isTileHighlighted: this.isTileHighlighted,
-        //     point: this.point,
-        //     tilePoint,
-        //     hasPointChanged,
-        //     isPointWithinBounds,
-        // });
-
         if (!this.isTileHighlighted && isPointWithinBounds && hasPointChanged) {
-            console.log('TILE_HIGHLIGHTED event');
             this.point = tilePoint;
             this.isTileHighlighted = true;
             this.scene.events.emit(EVENT.TILE_HIGHLIGHTED, {
@@ -64,7 +55,6 @@ export class Highlight {
         }
 
         if (this.isTileHighlighted && hasPointChanged) {
-            console.log('TILE_UNHIGHLIGHTED event');
             this.point = null;
             this.isTileHighlighted = false;
             this.scene.events.emit(EVENT.TILE_UNHIGHLIGHTED, {
@@ -72,20 +62,5 @@ export class Highlight {
                 y: tilePoint.y,
             });
         }
-
-        // this.highlight.setPosition(snappedX, snappedY);
-        // this.highlight.setDepth(1);
-
-        // // Check if the highlight is within the bounds of the map
-        // this.highlight.setVisible(
-        //     isPointWithinBounds(worldPoint, { width: mapWidth, height: mapHeight })
-        // );
-
-        // if (isPointWithinBounds(worldPoint, { width: mapWidth, height: mapHeight })) {
-        //     this.scene.events.emit(EVENT.TILE_HIGHLIGHTED, {
-        //         x: tileX,
-        //         y: tileY,
-        //     });
-        // }
     }
 }

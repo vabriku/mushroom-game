@@ -9,19 +9,21 @@ export class GraphicsController {
     highlight: Phaser.GameObjects.Graphics;
 
     constructor(private scene: Phaser.Scene) {
+        console.log('GraphicsController initializing');
         this.camera = this.scene.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
 
         // highlight
         this.highlight = this.scene.add.graphics();
         this.highlight.lineStyle(2, 0xffff00, 1); // yellow border
+        // slightly darked yellow for the fill
+        this.highlight.fillStyle(0xffff00, 0.3);
+        this.highlight.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
         this.highlight.strokeRect(0, 0, TILE_SIZE, TILE_SIZE);
         this.highlight.setVisible(false); // initially hidden
 
         this.background = this.scene.add.image(512, 384, 'background');
         this.background.setAlpha(0.5);
-
-        console.log('graphics controller initializing');
 
         this.scene.events.on(EVENT.MAP_INITIALIZED, this.onMapInitialized, this);
         this.scene.events.on(EVENT.TILE_SELECTED, this.onTileSelected, this);

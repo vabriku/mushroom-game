@@ -1,3 +1,4 @@
+import type { Size } from '@/types';
 import { EVENT, IMAGE, MAP, TILE_SIZE } from '../constants';
 
 export class MapController {
@@ -5,10 +6,11 @@ export class MapController {
     // private mapGround: Phaser.Tilemaps.Tilemap;
     // private mapItems: Phaser.Tilemaps.Tilemap;
     // private tileMap: Phaser.Tilemaps.Tilemap;
-    private mapWidth: number;
-    private mapHeight: number;
+    private mapSize: Size;
 
     constructor(scene: Phaser.Scene) {
+        console.log('MapController initializing');
+
         this.scene = scene;
         this.initializeMap();
     }
@@ -34,15 +36,11 @@ export class MapController {
         itemsMap.addTilesetImage(IMAGE.TILESET);
         itemsMap.createLayer(0, tileset ?? '', 0, 0);
 
-        this.mapWidth = groundMap.width;
-        this.mapHeight = groundMap.height;
-
-        this.scene.events.emit(EVENT.MAP_INITIALIZED, {
-            width: this.mapWidth,
-            height: this.mapHeight,
-        });
-
-        // return [groundMap, itemsMap];
+        this.mapSize = {
+            width: groundMap.width,
+            height: groundMap.height,
+        };
+        this.scene.events.emit(EVENT.MAP_INITIALIZED, this.mapSize);
     }
 
     // public create() {

@@ -1,9 +1,7 @@
 export class InputController {
     constructor(private scene: Phaser.Scene) {
-        this.init();
-    }
+        console.log('InputController initializing');
 
-    private init() {
         this.scene.input.once('pointerdown', () => {
             console.log('Pointer clicked');
         });
