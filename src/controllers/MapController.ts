@@ -1,17 +1,20 @@
 import type { Size } from '@/types';
 import { EVENT, IMAGE, MAP, TILE_SIZE } from '../constants';
+import { Tile } from '../entities/Tile';
 
 export class MapController {
     private scene: Phaser.Scene;
-    // private mapGround: Phaser.Tilemaps.Tilemap;
-    // private mapItems: Phaser.Tilemaps.Tilemap;
-    // private tileMap: Phaser.Tilemaps.Tilemap;
+    private mapGround: Phaser.Tilemaps.Tilemap;
+    private mapItems: Phaser.Tilemaps.Tilemap;
+    private tileMap: Tile[][];
     private mapSize: Size;
+    private centerTile: Tile;
 
     constructor(scene: Phaser.Scene) {
         console.log('MapController initializing');
 
         this.scene = scene;
+        this.tileMap = [];
         this.initializeMap();
     }
 
@@ -19,51 +22,52 @@ export class MapController {
         // TODO: use Tiled tmx format to get tags with layer for easier tile interaction
 
         // Create the ground layer
-        const groundMap = this.scene.make.tilemap({
+        this.mapGround = this.scene.make.tilemap({
             key: MAP.LEVEL_1_GROUND,
             tileWidth: TILE_SIZE,
             tileHeight: TILE_SIZE,
         });
-        const tileset = groundMap.addTilesetImage(IMAGE.TILESET);
-        groundMap.createLayer(0, tileset ?? '', 0, 0);
+        const tileset = this.mapGround.addTilesetImage(IMAGE.TILESET);
+        this.mapGround.createLayer(0, tileset ?? '');
 
         // Create the items layer
-        const itemsMap = this.scene.make.tilemap({
+        this.mapItems = this.scene.make.tilemap({
             key: MAP.LEVEL_1_ITEMS,
             tileWidth: TILE_SIZE,
             tileHeight: TILE_SIZE,
         });
-        itemsMap.addTilesetImage(IMAGE.TILESET);
-        itemsMap.createLayer(0, tileset ?? '', 0, 0);
+        this.mapItems.addTilesetImage(IMAGE.TILESET);
+        this.mapItems.createLayer(0, tileset ?? '');
 
         this.mapSize = {
-            width: groundMap.width,
-            height: groundMap.height,
+            width: this.mapGround.width,
+            height: this.mapGround.height,
         };
         this.scene.events.emit(EVENT.MAP_INITIALIZED, this.mapSize);
+
+        this.createTileMap();
+
+        this.centerTile =
+            this.tileMap[Math.floor(this.mapSize.width / 2)][Math.floor(this.mapSize.height / 2)];
+
+        this.centerTile.createShroomNode();
     }
 
-    // public create() {
-    //     const groundTileset = this.mapGround.addTilesetImage('tileset', 'tileset');
-    //     const itemsTileset = this.mapItems.addTilesetImage('tileset', 'tileset');
+    public createTileMap() {
+        for (let y = 0; y < this.mapSize.height; y++) {
+            const row: Tile[] = [];
+            for (let x = 0; x < this.mapSize.width; x++) {
+                const tile = this.mapItems.getTileAt(x, y, true);
 
-    //     this.mapGround.createLayer('ground', groundTileset);
-    //     this.mapItems.createLayer('items', itemsTileset);
-    // }
+                console.log(`Tile at (${x}, ${y}):`, tile);
+                if (!tile) {
+                    throw new Error(`Tile not found at (${x}, ${y})`);
+                }
 
-    // public createTileMap() {
-    //     for (let y = 0; y < map.height; y++) {
-    //         const row: Tile[] = [];
-    //         for (let x = 0; x < map.width; x++) {
-    //             const tile = layer.getTileAt(x, y);
-    //             if (tile) {
-    //                 const customTile = new Tile(tile);
-    //                 row.push(customTile);
-    //             } else {
-    //                 row.push(null); // Handle empty tiles if necessary
-    //             }
-    //         }
-    //         tileMap.push(row);
-    //     }
-    // }
+                const tileEntity = new Tile(tile);
+                row.push(tileEntity);
+            }
+            this.tileMap.push(row);
+        }
+    }
 }

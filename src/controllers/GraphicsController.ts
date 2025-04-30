@@ -29,6 +29,8 @@ export class GraphicsController {
         this.scene.events.on(EVENT.TILE_SELECTED, this.onTileSelected, this);
         this.scene.events.on(EVENT.TILE_HIGHLIGHTED, this.onTileHighlighted, this);
         this.scene.events.on(EVENT.TILE_UNHIGHLIGHTED, this.onTileUnHighlighted, this);
+
+        // this.scene.registry.events.on('changedata', this.updateScore, this);
     }
 
     private onMapInitialized(data: EventData[EVENT.MAP_INITIALIZED]) {

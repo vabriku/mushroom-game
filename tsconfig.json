@@ -21,6 +21,7 @@
         "paths": {
             "@/*": ["./src/*"],
             "@components/*": ["./src/components/*"],
+            "@entities/*": ["./src/entities/*"],
             "@controllers/*": ["./src/controllers/*"],
             "@utils/*": ["./src/utils/*"],
             "@scenes/*": ["./src/scenes/*"],

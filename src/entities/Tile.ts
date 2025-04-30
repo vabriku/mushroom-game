@@ -30,4 +30,11 @@ export class Tile {
             // Example: generate nutrients
         }
     }
+
+    createShroomNode() {
+        console.log('Creating mushroom node');
+        // Implement logic to create a mushroom node
+        this.hasMushroom = true;
+        // add mushroom sprite to the tile
+    }
 }
