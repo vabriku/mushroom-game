@@ -1,5 +1,5 @@
 import type { Size } from '@/types';
-import { EVENT, IMAGE, MAP, TILE_SIZE } from '../constants';
+import { SCENE_DATA, IMAGE, MAP, TILE_SIZE } from '../constants';
 import { Tile } from '../entities/Tile';
 
 export class MapController {
@@ -43,10 +43,15 @@ export class MapController {
             width: this.mapGround.width,
             height: this.mapGround.height,
         };
-        this.scene.events.emit(EVENT.MAP_INITIALIZED, this.mapSize);
+
+        // set map data for other consumers
+        this.scene.data.set(SCENE_DATA.MAP_SIZE, this.mapSize);
+        this.scene.data.set(SCENE_DATA.TILEMAP_ITEMS, this.mapItems);
+        this.scene.data.set(SCENE_DATA.TILEMAP_GROUND, this.mapGround);
 
         this.createTileMap();
 
+        // create center player shroom. Maybe for GameController?
         this.centerTile =
             this.tileMap[Math.floor(this.mapSize.width / 2)][Math.floor(this.mapSize.height / 2)];
 
@@ -59,7 +64,7 @@ export class MapController {
             for (let x = 0; x < this.mapSize.width; x++) {
                 const tile = this.mapItems.getTileAt(x, y, true);
 
-                console.log(`Tile at (${x}, ${y}):`, tile);
+                // console.log(`Tile at (${x}, ${y}):`, tile);
                 if (!tile) {
                     throw new Error(`Tile not found at (${x}, ${y})`);
                 }

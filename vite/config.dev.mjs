@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import commonConfig from '../vite.config';
 
 export default defineConfig({
     base: './',
@@ -6,12 +7,15 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    phaser: ['phaser']
-                }
-            }
+                    phaser: ['phaser'],
+                },
+            },
         },
     },
     server: {
-        port: 8080
-    }
+        port: 8080,
+    },
+    resolve: {
+        alias: commonConfig.resolve.alias,
+    },
 });

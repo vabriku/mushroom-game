@@ -1,10 +1,8 @@
-import type { Size } from '@/types';
 import type { EventData } from '../constants';
 import { EVENT, TILE_SIZE } from '../constants';
 
 export class GraphicsController {
     camera: Phaser.Cameras.Scene2D.Camera;
-    private mapSize: Size;
     private background: Phaser.GameObjects.Image;
     highlight: Phaser.GameObjects.Graphics;
 
@@ -25,20 +23,12 @@ export class GraphicsController {
         this.background = this.scene.add.image(512, 384, 'background');
         this.background.setAlpha(0.5);
 
-        this.scene.events.on(EVENT.MAP_INITIALIZED, this.onMapInitialized, this);
         this.scene.events.on(EVENT.TILE_SELECTED, this.onTileSelected, this);
         this.scene.events.on(EVENT.TILE_HIGHLIGHTED, this.onTileHighlighted, this);
         this.scene.events.on(EVENT.TILE_UNHIGHLIGHTED, this.onTileUnHighlighted, this);
+        this.scene.events.on(EVENT.POINTER_DOWN, this.onPointerDown, this);
 
         // this.scene.registry.events.on('changedata', this.updateScore, this);
-    }
-
-    private onMapInitialized(data: EventData[EVENT.MAP_INITIALIZED]) {
-        this.mapSize = data;
-        // Rendering setup logic
-        console.log(
-            `Map initialized with width: ${this.mapSize.width}, height: ${this.mapSize.height}`
-        );
     }
 
     private onTileSelected(data: { x: number; y: number }) {
@@ -59,5 +49,14 @@ export class GraphicsController {
 
     private onTileUnHighlighted(_data: EventData['TILE_UNHIGHLIGHTED']) {
         this.highlight.setVisible(false);
+    }
+
+    private onPointerDown(pointer: Phaser.Input.Pointer) {
+        const snappedX = Math.floor(pointer.worldX / TILE_SIZE) * TILE_SIZE;
+        const snappedY = Math.floor(pointer.worldY / TILE_SIZE) * TILE_SIZE;
+
+        this.highlight.setPosition(snappedX, snappedY);
+        this.highlight.setDepth(1);
+        this.highlight.setVisible(true);
     }
 }

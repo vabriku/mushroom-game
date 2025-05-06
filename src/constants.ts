@@ -1,3 +1,5 @@
+import type { Point, Size } from '@/types';
+
 export const TILE_SIZE = 64;
 
 export enum MAP {
@@ -10,17 +12,35 @@ export enum IMAGE {
 }
 
 export enum EVENT {
-    MAP_INITIALIZED = 'MAP_INITIALIZED',
     TILE_SELECTED = 'TILE_SELECTED',
     TILE_HIGHLIGHTED = 'TILE_HIGHLIGHTED',
     TILE_UNHIGHLIGHTED = 'TILE_UNHIGHLIGHTED',
     TURN_ENDED = 'TURN_ENDED',
+    POINTER_DOWN = 'POINTER_DOWN',
 }
 
 export interface EventData {
-    [EVENT.MAP_INITIALIZED]: { width: number; height: number };
-    [EVENT.TILE_SELECTED]: { x: number; y: number };
-    [EVENT.TILE_HIGHLIGHTED]: { x: number; y: number };
-    [EVENT.TILE_UNHIGHLIGHTED]: { x: number; y: number };
-    [EVENT.TURN_ENDED]: { x: number; y: number };
+    [EVENT.TILE_SELECTED]: Point;
+    [EVENT.TILE_HIGHLIGHTED]: Point;
+    [EVENT.TILE_UNHIGHLIGHTED]: Point;
+    [EVENT.TURN_ENDED]: Point;
+    [EVENT.POINTER_DOWN]: { pointer: Phaser.Input.Pointer; worldPoint: Point; tile?: undefined };
+}
+
+// scene data and game registry
+export enum GAME_DATA {
+    HIGH_SCORE = 'HIGH_SCORE',
+}
+
+export enum SCENE_DATA {
+    MAP_SIZE = 'MAP_SIZE',
+    TILEMAP_GROUND = 'TILEMAP_GROUND',
+    TILEMAP_ITEMS = 'TILEMAP_ITEMS',
+}
+
+export interface DataType {
+    [GAME_DATA.HIGH_SCORE]: number;
+    [SCENE_DATA.MAP_SIZE]: Size;
+    [SCENE_DATA.TILEMAP_GROUND]: Phaser.Tilemaps.Tilemap;
+    [SCENE_DATA.TILEMAP_ITEMS]: Phaser.Tilemaps.Tilemap;
 }
