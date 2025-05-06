@@ -1,5 +1,6 @@
 import type { Point, Size } from '@/types';
 
+export const MAP_SIZE = { width: 21, height: 21 };
 export const TILE_SIZE = 64;
 
 export enum MAP {
@@ -44,3 +45,14 @@ export interface DataType {
     [SCENE_DATA.TILEMAP_GROUND]: Phaser.Tilemaps.Tilemap;
     [SCENE_DATA.TILEMAP_ITEMS]: Phaser.Tilemaps.Tilemap;
 }
+
+export const TILE = {
+    MUSHROOM: 132,
+    WEB_CENTER: 143,
+    ROCK: 42,
+    GRASS: 23,
+    SAND: 18,
+    TREE_1: 43,
+    TREE_2: 60,
+    TREE_3: 128,
+} as const;

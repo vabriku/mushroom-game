@@ -1,5 +1,5 @@
 import type { Size } from '@/types';
-import { SCENE_DATA, IMAGE, MAP, TILE_SIZE } from '../constants';
+import { SCENE_DATA, IMAGE, MAP, TILE_SIZE, TILE, MAP_SIZE } from '../constants';
 import { Tile } from '../entities/Tile';
 
 export class MapController {
@@ -23,7 +23,9 @@ export class MapController {
 
         // Create the ground layer
         this.mapGround = this.scene.make.tilemap({
-            key: MAP.LEVEL_1_GROUND,
+            // key: MAP.LEVEL_1_GROUND,
+            key: 'custom',
+            data: this.createMapData(),
             tileWidth: TILE_SIZE,
             tileHeight: TILE_SIZE,
         });
@@ -59,20 +61,48 @@ export class MapController {
     }
 
     public createTileMap() {
+        const map: Tile[] = [];
+        this.mapGround.forEachTile((tile: Phaser.Tilemaps.Tile) => {
+            const tileEntity = new Tile(tile);
+            // console.log('Tile:', tileEntity);
+            map.push(tileEntity);
+        });
+
         for (let y = 0; y < this.mapSize.height; y++) {
             const row: Tile[] = [];
             for (let x = 0; x < this.mapSize.width; x++) {
-                const tile = this.mapItems.getTileAt(x, y, true);
+                const groundTile = this.mapGround.getTileAt(x, y, true);
 
                 // console.log(`Tile at (${x}, ${y}):`, tile);
-                if (!tile) {
+                if (!groundTile) {
                     throw new Error(`Tile not found at (${x}, ${y})`);
                 }
 
-                const tileEntity = new Tile(tile);
+                const tileEntity = new Tile(groundTile);
                 row.push(tileEntity);
             }
             this.tileMap.push(row);
         }
+    }
+
+    private createMapData() {
+        // const mapData = [];
+        // for (let y = 0; y < MAP_SIZE.height; y++) {
+        //     const row = [];
+        //     for (let x = 0; x < MAP_SIZE.width; x++) {
+        //         row.push(TILE.GRASS);
+        //     }
+        //     mapData.push(row);
+        // }
+
+        // return mapData;
+
+        return [
+            [TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.SAND],
+            [TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.SAND, TILE.SAND],
+            [TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.SAND],
+            [TILE.SAND, TILE.GRASS, TILE.GRASS, TILE.GRASS, TILE.GRASS],
+            [TILE.SAND, TILE.SAND, TILE.GRASS, TILE.GRASS, TILE.GRASS],
+        ];
     }
 }
