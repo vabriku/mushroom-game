@@ -9,7 +9,11 @@ export class GraphicsController {
     constructor(private scene: Phaser.Scene) {
         console.log('GraphicsController initializing');
         this.camera = this.scene.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        // this.camera.setBackgroundColor(0x00ff00);
+        this.camera.setBackgroundColor(0x000);
+        // this.camera.setBounds(0, 0, 1920, 768); // Set camera bounds to match the game world size
+        this.camera.setScroll(10, 40); // Set initial camera scroll position
+        // this.camera.setZoom(0.7); // Set initial camera zoom level
 
         // highlight
         this.highlight = this.scene.add.graphics();
