@@ -1,26 +1,35 @@
-import { Scene } from 'phaser';
-import Pointer = Phaser.Input.Pointer;
-import Camera = Phaser.Cameras.Scene2D.Camera;
-import Tilemap = Phaser.Tilemaps.Tilemap;
+import type { EventData } from '@/constants';
+import { EVENT, SCENE_DATA } from '@/constants';
+import { getSceneData } from '@/utils/getSceneData';
+import type { Scene } from 'phaser';
 
 export class ClickTextPopup {
-    private scene: Scene;
-
-    constructor(scene: Scene) {
+    constructor(private scene: Scene) {
         this.scene = scene;
+
+        this.scene.events.on(EVENT.POINTER_DOWN, this.onPointerDown, this);
     }
 
-    show(pointer: Pointer, camera: Camera, mapGround: Tilemap, message: string): void {
-        const worldPoint = pointer.positionToCamera(camera) as Phaser.Math.Vector2;
+    private onPointerDown({ pointer, worldPoint }: EventData[EVENT.POINTER_DOWN]) {
+        const mapGround = getSceneData(this.scene, SCENE_DATA.TILEMAP_GROUND);
 
-        const tile = mapGround.layers[0].tilemapLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+        if (!mapGround) {
+            console.error('Map ground not found');
 
-        if (tile) {
-            const tileString = `You clicked tile at row=${tile.y}, col=${tile.x}, index=${tile.index}`;
-            message = message.concat(' ' + tileString);
-        } else {
-            console.log('No tile at that position');
+            return;
         }
+
+        const tile = mapGround.layers
+            .at(0)
+            ?.tilemapLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+
+        if (!tile) {
+            console.log('No tile at that position');
+
+            return;
+        }
+
+        const message = `You clicked tile at row=${tile.y}, col=${tile.x}, index=${tile.index}`;
 
         const text = this.scene.add.text(pointer.x, pointer.y - 20, message, {
             font: '16px Arial',

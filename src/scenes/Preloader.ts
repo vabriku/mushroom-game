@@ -29,8 +29,9 @@ export class Preloader extends Scene {
 
         this.load.image('logo', 'logo.png');
         this.load.image(IMAGE.TILESET, 'images/tiles.png');
-        this.load.tilemapCSV(MAP.LEVEL_1_GROUND, 'maps/level-1_ground.csv');
-        this.load.tilemapCSV(MAP.LEVEL_1_ITEMS, 'maps/level-1_items.csv');
+        this.load.tilemapTiledJSON(MAP.LEVEL_1, 'maps/level-1.tmj');
+        // this.load.tilemapCSV(MAP.LEVEL_1_GROUND, 'maps/level-1_ground.csv');
+        // this.load.tilemapCSV(MAP.LEVEL_1_ITEMS, 'maps/level-1_items.csv');
     }
 
     create() {
